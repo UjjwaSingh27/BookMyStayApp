@@ -2,74 +2,111 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*
- * CLASS – RoomInventory
- * Use Case 3: Centralized Room Inventory Management
- * Version 3.1
+ * ROOM CLASS
+ * Stores room details
  */
+class Room {
+    int beds;
+    int size;
+    double price;
 
+    public Room(int beds, int size, double price) {
+        this.beds = beds;
+        this.size = size;
+        this.price = price;
+    }
+}
+
+
+/*
+ * ROOM INVENTORY CLASS
+ * Stores availability using HashMap
+ */
 class RoomInventory {
 
-    // Key = Room type
-    // Value = Available room count
     private HashMap<String, Integer> roomAvailability;
 
-    // Constructor
     public RoomInventory() {
         roomAvailability = new HashMap<>();
         initializeInventory();
     }
 
-    // Initialize default availability
     private void initializeInventory() {
         roomAvailability.put("Single", 5);
         roomAvailability.put("Double", 3);
         roomAvailability.put("Suite", 2);
     }
 
-    // Return availability map
     public Map<String, Integer> getRoomAvailability() {
         return roomAvailability;
-    }
-
-    // Update room availability
-    public void updateAvailability(String roomType, int count) {
-        roomAvailability.put(roomType, count);
     }
 }
 
 
 /*
- * MAIN CLASS – UseCase3InventorySetup
+ * ROOM SEARCH SERVICE
+ * Performs read-only search
  */
+class RoomSearchService {
 
-public class UseCase3InventorySetup {
+    public void searchAvailableRooms(
+            RoomInventory inventory,
+            Room singleRoom,
+            Room doubleRoom,
+            Room suiteRoom) {
+
+        Map<String, Integer> availability = inventory.getRoomAvailability();
+
+        System.out.println("Room Search\n");
+
+        if (availability.get("Single") > 0) {
+            System.out.println("Single Room:");
+            System.out.println("Beds: " + singleRoom.beds);
+            System.out.println("Size: " + singleRoom.size + " sqft");
+            System.out.println("Price per night: " + singleRoom.price);
+            System.out.println("Available: " + availability.get("Single"));
+            System.out.println();
+        }
+
+        if (availability.get("Double") > 0) {
+            System.out.println("Double Room:");
+            System.out.println("Beds: " + doubleRoom.beds);
+            System.out.println("Size: " + doubleRoom.size + " sqft");
+            System.out.println("Price per night: " + doubleRoom.price);
+            System.out.println("Available: " + availability.get("Double"));
+            System.out.println();
+        }
+
+        if (availability.get("Suite") > 0) {
+            System.out.println("Suite Room:");
+            System.out.println("Beds: " + suiteRoom.beds);
+            System.out.println("Size: " + suiteRoom.size + " sqft");
+            System.out.println("Price per night: " + suiteRoom.price);
+            System.out.println("Available: " + availability.get("Suite"));
+        }
+    }
+}
+
+
+/*
+ * MAIN CLASS – UseCase4RoomSearch
+ */
+public class BookMyStayApp {
 
     public static void main(String[] args) {
 
         RoomInventory inventory = new RoomInventory();
 
-        System.out.println("Hotel Room Inventory Status\n");
+        Room singleRoom = new Room(1, 250, 1500.0);
+        Room doubleRoom = new Room(2, 400, 2500.0);
+        Room suiteRoom = new Room(3, 750, 5000.0);
 
-        Map<String, Integer> availability = inventory.getRoomAvailability();
+        RoomSearchService searchService = new RoomSearchService();
 
-        System.out.println("Single Room:");
-        System.out.println("Beds: 1");
-        System.out.println("Size: 250 sqft");
-        System.out.println("Price per night: 1500.0");
-        System.out.println("Available Rooms: " + availability.get("Single"));
-        System.out.println();
-
-        System.out.println("Double Room:");
-        System.out.println("Beds: 2");
-        System.out.println("Size: 400 sqft");
-        System.out.println("Price per night: 2500.0");
-        System.out.println("Available Rooms: " + availability.get("Double"));
-        System.out.println();
-
-        System.out.println("Suite Room:");
-        System.out.println("Beds: 3");
-        System.out.println("Size: 750 sqft");
-        System.out.println("Price per night: 5000.0");
-        System.out.println("Available Rooms: " + availability.get("Suite"));
+        searchService.searchAvailableRooms(
+                inventory,
+                singleRoom,
+                doubleRoom,
+                suiteRoom);
     }
 }
